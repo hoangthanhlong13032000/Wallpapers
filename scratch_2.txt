@@ -1,0 +1,72 @@
+Các vấn đề vòng R101
+
+1. Vấn đề chậm thời gian dự kiến phát hành
+    * Vấn đề chủ quan (cá nhân) - không muốn được đưa lên trong cuộc họp:
+        - Nhược điểm:
+            + do bản thân thiếu kinh nghiêm đánh giá được sẽ có nhiều các vấn đề phát sinh khi phải làm việc với nhiều bên liên quan cùng 1 vòng (BA, PC, BE)
+            + lần đầu tự làm PBI lớn, có nhiều UI phức tạp, liên kết với nhiều bên khác mà không có sự hỗ trợ, kiểm tra giúp đỡ từ người có kinh nghiệm
+            (các vòng trước sẽ có anh LNTùng xử lý, quan tâm trước các vấn đề BE có thể xảy ra giúp từ đầu vòng)
+            + lần đầu sử dụng, làm quen các thư viện hỗ trợ UI như Multitype RecycleView, loadmore với thử viện NoScrollessRecycleView dẫn tới cần vừa học làm quen vừa thi công
+            + quá cầu toàn quan tâm tới từng chi tiết nhỏ của UI, UX dẫn tới mất nhiều thời gian để đưa lại các trải nhiệm UI, UX không quá quan trọng
+            + chưa chạy đủ các FTC do thời gian gấp (đã có thương lượng riêng với QC và được chấp thuận châm trước)
+            + nói chuyện, tranh luận mất tập trung trong thời gian thi công :)))))
+            + ảnh hưởng, nghỉ nhiều bởi các vấn đề cá nhân như đồ án, tốt nghiệp, nghỉ lễ tết
+        - Ưu điểm
+            + Hỗ trợ nhanh chóng, nhiệt tình các bên dù đã bị trễ thời gian
+                + tham gia hỗ trợ BE phát hiện sửa lỗi, tư vấn thay đổi phương án thi công, phản hồi nhanh chóng bên BE hay PC khi có vấn đề liên quan
+                + hỗ trợ QC tìm, phát hiện nguyên nhân gốc rễ của lỗi ngay khi phát hiện lỗi dù là lỗi từ Sale hay PC hay Manager hay do nghiệp vụ BA phân tích thiếu
+                + tham gia hỗ trợ BA phân tích, đưa giải pháp cho các nghiệp vụ thiếu
+            + Tỉ mỉ đến các chi tiết nhỏ của UI, UX đảm bảo UI giống thiết kế nhất, người dùng có trải nhiệm UI tốt nhất có thể
+            + Hoàn thiện cẩn thận PBI dù thời gian đã bị trễ để đảm bảo sản phẩm được đưa ra tốt nhất có thể cho người dùng
+    * Vấn đề khách quan
+        - Vấn đề từ các bên liên quan:
+            + Phải hỗ trợ giải đáp, phản hồi PC khi có vấn đề liên quan
+            + Phải hõ trợ QC tìm nguyên nhân lỗi từ các bên
+            + BE đưa ra chưa đủ đảm bảo, cần phải sửa đẩy lại nhiều lần, mỗi lần đẩy thì đẩy được trong local -> check lỗi trong local
+            + Phải thi công nghiệp vụ bổ sung yc từ phía BA
+            + Việc test, debug trong local rất khó khăn, một số tính năng không có trong local như thông báo push
+        - Vấn đề công nghệ:
+            + việc bảo trì, sửa code cũ tốn thời gian do code cũ xấu
+            + một số thư viện cũ dẫn tới lỗi khi dùng trên các máy android mới (loadmore bằng thư viện EndlessScrolling)
+        - Vấn đề vòng lặp:
+            + các vòng lặp bị gối đầu, chồng chéo lên nhau, vòng này vẫn còn phải giải quyết các vấn đề vòng trước
+            -> mất khoảng thời gian đầu tìm hiểu PBI vòng mới để ngồi thi công pbi vòng trước chưa xog
+            -> không tìm hiểu sâu được về PBI vòng mới trước khi đào tạo
+            -> đag thi công dở thì cần check lỗi, sửa lỗi vòng trước
+            -> việc chồng lặp dẫn tới hiệu ứng domino vòng này trễ -> vòng tiếp cũng trễ
+
+2. Các giải pháp, đóng góp đưa ra
+
+    * việc estimate thời gian thi công bản chất là "đánh giá, ước lượng" mà ước lượng thì mang tính chất tương đối,
+    không nên dùng chính xác khoảng thời gian đánh giá này để làm mốc build plan
+        -> cần có sự đánh giá và đưa ra thời gian chính xác từ người có kinh nghiệm
+        -> nếu nhiều quá thì cần lý do giải thích từ dev
+        -> nếu ngắn quá thì cần giải thích thêm cho dev các vấn đề có thể phát sinh
+
+    * Cần tách biệt 2 vòng lặp tránh bị chồng chéo, giữa 2 vòng lặp cần có khoảng thời gian (Từ lúc QC done -> bắt đầu thi công vòng mới)
+        -> giải quyết các vấn đề tồn đọng từ vòng cũ
+        -> buid phát hành, tìm hiểu PBI nghiệp vụ, xem code cũ, viết PATC, đánh giá storipoint, estimate thời gian, lên kế hoạch vòng mới
+        -> kiểm tra đánh giá các vấn đề từ các bên (BE, service, ..)
+
+    * Cần đánh giá lại con số 0,5 bug / 1 storipoint, con số này chưa hợp lý với basestory hiện tại
+        -> hoặc là số 0,5 cần điều chỉnh
+        -> hoặc là basestory cần điều chỉnh cho phù hợp số 0,5 này
+
+    * Việc phát hành đúng hạn có thực sự quan trọng hơn chất lượng sản phẩm?
+        -> vòng trước có vấn đề là các nghiệp vụ bổ sung được đẩy sang vòng sau
+        -> sản phẩm đưa ra không hoàn thiện, chưa giải quyết hết các vấn đề
+        -> dù có trễ hạn nhưng vẫn cần ưu tiên hoàn thiện, chau chuốt sản phẩm để có được chất lượng sản phẩm tốt nhất tới tay người dùng
+
+    * Nên có các PBI refactor, chau chuốt sản phẩm, giải quyết các vấn đề tồn động chứ không nên tập trung hoàn toàn vào tính năng mới
+        -> Việc cứ bổ sung, làm thêm vào app sẽ làm sản phẩm ngày càng phình to ra, quá nhiều tính năng sẽ khiến việc phát triển,
+        bảo trì trở nên khó khăn và tốn nhiều effort
+
+3. Các vấn đề con người (private phạm vi dự án)
+    * Bọn em khum cần khen hay ca ngợi hay jj đó khi họp hành gì cả, thay vào đó có thể dành những lời có cánh này cho phái nữ các bên QC, BA
+    (dù sao thì con gái cũng yêu bằng tai mà :33)
+    * Nếu ta đủ mềm dẻo thì việc bỏ qua chắc vài cái lỗi "cơ bản" hay lỗi "demo" hay chạy sót vài cái FTC chắc khum phải vấn đề đâu :>
+
+Điều cuối cùng là em mong muốn sẽ có buổi cafe nào đó có anh Nam, em (có thể có thêm anh Tùng)
+để em chia sẻ thêm về định hướng phát triển của bản thân trong tương lai :3
+
+Cảm ơn đã đọc đến đây!!!!
